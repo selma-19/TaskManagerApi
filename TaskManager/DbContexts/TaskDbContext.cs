@@ -1,22 +1,30 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using TaskManager.Entities;
+
 namespace TaskManager.DbContexts
 {
     public class TaskDbContext : DbContext
     {
-        public DbSet<Task> Tasks { get; set; }
+        public DbSet<TaskItem> Tasks { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=DESKTOP-KPFA88B\\\\MSSQLSERVER01;Database=CityInfoDB;Integrated ;Security=true;Encrypt=False;");
+
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.Development.json")
+                .Build();
+
+            string connectionString = configuration.GetConnectionString("TaskDatabase");
+            optionsBuilder.UseSqlServer(connectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Task>()
+            modelBuilder.Entity<TaskItem>()
                 .HasKey(t => t.Id);
 
-            // ... any additional configuration for your entities
 
             base.OnModelCreating(modelBuilder);
         }
