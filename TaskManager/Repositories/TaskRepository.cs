@@ -39,6 +39,7 @@ namespace TaskManager.Repositories
         }
         public void CreateTask(TaskItem task)
         {
+            task.Status = "In progress";
             _dbContext.Tasks.Add(task);
             _dbContext.SaveChanges();
         }
